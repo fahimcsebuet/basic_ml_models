@@ -1,5 +1,6 @@
 import generate_random_data as grd
 import matplotlib.pyplot as plt
+import mnist_reader as mr
 import numpy as np
 from svm_model import SVM
 
@@ -24,7 +25,7 @@ def plot_svm(X_a, X_b, svm):
 
     plt.legend(loc='best')
 
-    plt.show()
+    plt.savefig('svm_model.pdf', dpi=300, bbox_inches='tight')
 
 
 def main():
@@ -32,6 +33,11 @@ def main():
     svm = SVM()
     svm.fit(X, y)
     plot_svm(X_a, X_b, svm)
+    mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
+    svm_mnist = SVM()
+    svm.fit(mnist_train_X, mnist_train_y)
+    ret = svn.predict(mnist_test_X)
+    print(ret)
 
 
 if __name__ == "__main__":
