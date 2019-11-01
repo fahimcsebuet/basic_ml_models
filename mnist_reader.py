@@ -8,8 +8,12 @@ def filter_0_or_1(in_X, in_y):
     for id in range(len(in_X)):
             if in_y[id] == 0 or in_y[id] == 1:
                 X.append(in_X[id])
-                y.append(in_y[id])
-    return np.array(X), np.array(y)
+                if in_y[id] == 0:
+                    y.append(-1)
+                else:
+                    y.append(1)
+
+    return np.array(X).astype(np.double), np.array(y).astype(np.double)
 
 
 def read_mnist_train_data():

@@ -7,7 +7,7 @@ from svm_model import SVM
 def plot_svm(X_a, X_b, svm):
     # plot data points and suport vectors
     plt.style.use('classic')
-    plt.title("Support Vector Machine")
+    plt.title("Support Vector Machine C=" + str(svm.C))
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.plot(X_a[:,0], X_a[:,1], 'rx', label='Class A')
@@ -25,19 +25,25 @@ def plot_svm(X_a, X_b, svm):
 
     plt.legend(loc='best')
 
-    plt.savefig('svm_model.pdf', dpi=300, bbox_inches='tight')
+    plt.savefig('svm_model'+ str(svm.C) +'.pdf', dpi=300, bbox_inches='tight')
+    plt.clf()
 
 
 def main():
     X, y, X_a, X_b = grd.generate_dataset()
-    svm = SVM()
-    svm.fit(X, y)
-    plot_svm(X_a, X_b, svm)
+    C_list = [0.0001, 10.1, 100.1, 1000.1]
+    for c in C_list:
+        svm = SVM(c)
+        svm.fit(X, y)
+        plot_svm(X_a, X_b, svm)
+        misclassification_error = np.sum(svm.predict(X) != y)/len(y)
+        print(misclassification_error)
+
     mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
     svm_mnist = SVM()
-    svm.fit(mnist_train_X, mnist_train_y)
-    ret = svn.predict(mnist_test_X)
-    print(ret)
+    svm_mnist.fit(mnist_train_X, mnist_train_y)
+    generalization_error = np.sum(svn_mnist.predict(mnist_test_X) != mnist_test_y)/len(mnist_test_y)
+    print(generalization_error)
 
 
 if __name__ == "__main__":
