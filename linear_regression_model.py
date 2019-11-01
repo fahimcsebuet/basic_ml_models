@@ -9,16 +9,21 @@ class LinearRegression:
 
     def fit(self, X, y):
         self.w = np.zeros((X.shape[1], 1))
+        y = y.reshape(len(y), 1)
         m = X.shape[0]
 
+        count = 1
         for _ in range(self.iterations):
-            y_pred = np.dot(x, self.w)
+            y_pred = np.dot(X, self.w)
             residuals = y_pred - y
             gradients = np.dot(X.T, residuals)
-            self.w -= (self.lam / m) * gradients
-        return self
+            self.w -= ((self.lam / m) * gradients)
+
+    def project(self, X):
+        return np.dot(X, self.w)
 
     def predict(self, X, threshold):
-        if np.dot(X, self.w) >= threshold
+        proj = self.project(X)
+        if self.project(X).all() >= threshold:
             return 1
         return -1

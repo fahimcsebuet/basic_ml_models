@@ -29,8 +29,4 @@ def read_mnist_test_data():
 def read_mnist_data():
     train_X, train_y = read_mnist_train_data()
     test_X, test_y = read_mnist_test_data()
-    print(train_X.shape)
-    print(train_y.shape)
-    print(test_X.shape)
-    print(test_y.shape)
     return train_X, train_y, test_X, test_y
