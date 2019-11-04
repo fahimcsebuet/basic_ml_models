@@ -12,7 +12,6 @@ class LinearRegression:
         y = y.reshape(len(y), 1)
         m = X.shape[0]
 
-        count = 1
         for _ in range(self.iterations):
             y_pred = np.dot(X, self.w)
             residuals = y_pred - y
