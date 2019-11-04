@@ -71,7 +71,7 @@ def run_model(X, y, X_a, X_b, model, model_name, plot_func):
 def run_dummy_data_training(out_file):
     X, y, X_a, X_b = grd.generate_dataset()
 
-    C_list = [0.0, 0.0001, 100.1, 1000.1]
+    C_list = [0.0001, 0.001, 100.1, 1000.1]
     for c in C_list:
         svm = SVM(c)
         misclassification_error = run_model(X, y, X_a, X_b, svm, "support_vector_machine", plot_svm)
@@ -127,7 +127,7 @@ def run_model_with_cvloo(X, y, model):
 def run_dummy_data_cvloo_training(out_file):
     X, y, X_a, X_b = grd.generate_dataset()
 
-    C_list = [0.0, 0.0001, 100.1, 1000.1]
+    C_list = [0.0001, 0.001, 100.1, 1000.1]
     for c in C_list:
         svm = SVM(c)
         cv_error = run_model_with_cvloo(X, y, svm)
@@ -145,7 +145,7 @@ def run_dummy_data_cvloo_training(out_file):
 def main():
     out_file = open("run.out", "w")
     run_dummy_data_training(out_file)
-    run_mnist_training(out_file)
+    # run_mnist_training(out_file)
     run_dummy_data_cvloo_training(out_file)
     out_file.close()
 
