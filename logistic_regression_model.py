@@ -11,7 +11,7 @@ class LogisticRegression(object):
 
     def fit(self, X, y):
         self.theta = np.zeros(X.shape[1])
-        for i in range(self.iterations):
+        for _ in range(self.iterations):
             x = np.dot(X, self.theta)
             h = self.sigmoid(x)
             gradient = np.dot(X.T, (h - y)) / y.size

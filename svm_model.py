@@ -56,5 +56,5 @@ class SVM(object):
     def project(self, X):
         return np.dot(X, self.w) + self.b
 
-    def predict(self, X):
+    def predict(self, X, threshold):
         return np.sign(self.project(X))

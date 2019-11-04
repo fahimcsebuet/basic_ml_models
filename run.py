@@ -8,10 +8,10 @@ from svm_model import SVM
 import sys
 
 
-def plot_svm(X_a, X_b, svm):
+def plot_svm(X_a, X_b, svm, model_name):
     # plot data points and suport vectors
     plt.style.use('classic')
-    plt.title("Support Vector Machine C=" + str(svm.C))
+    plt.title(model_name + " C=" + str(svm.C))
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.plot(X_a[:,0], X_a[:,1], 'rx', label='Class A')
@@ -29,7 +29,7 @@ def plot_svm(X_a, X_b, svm):
 
     plt.legend(loc='best')
 
-    plt.savefig('svm_model'+ str(svm.C) +'.pdf', dpi=300, bbox_inches='tight')
+    plt.savefig(model_name + str(svm.C) +'.pdf', dpi=300, bbox_inches='tight')
     plt.clf()
 
 
@@ -55,34 +55,99 @@ def plot_regression(X_a, X_b, model, model_name):
     plt.clf()
 
 
-def main():
+def run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, model):
+    model.fit(mnist_train_X, mnist_train_y)
+    generalization_error = np.sum(model.predict(mnist_test_X, 0.0) != mnist_test_y)/len(mnist_test_y)
+    return generalization_error
+
+
+def run_model(X, y, X_a, X_b, model, model_name, plot_func):
+    model.fit(X, y)
+    plot_func(X_a, X_b, model, model_name)
+    misclassification_error = np.sum(model.predict(X, 0.0) != y)/len(y)
+    return misclassification_error
+
+
+def run_dummy_data_training(out_file):
     X, y, X_a, X_b = grd.generate_dataset()
 
-    C_list = [0.0001, 10.1, 100.1, 1000.1]
+    C_list = [0.0, 0.0001, 100.1, 1000.1]
     for c in C_list:
         svm = SVM(c)
-        svm.fit(X, y)
-        plot_svm(X_a, X_b, svm)
-        misclassification_error = np.sum(svm.predict(X) != y)/len(y)
-        print(misclassification_error)
-
-    mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
-    svm_mnist = SVM()
-    svm_mnist.fit(mnist_train_X, mnist_train_y)
-    generalization_error = np.sum(svn_mnist.predict(mnist_test_X) != mnist_test_y)/len(mnist_test_y)
-    print(generalization_error)
+        misclassification_error = run_model(X, y, X_a, X_b, svm, "support_vector_machine", plot_svm)
+        out_file.write("SVM C:" + str(c) + " Misclassification Error=" + str(misclassification_error) + "\n")
 
     linear_reg = lrm.LinearRegression()
-    linear_reg.fit(X, y)
-    misclassification_error = np.sum(linear_reg.predict(X, 0) != y)/len(y)
-    print(misclassification_error)
-    plot_regression(X_a, X_b, linear_reg, "linear_regression")
+    misclassification_error = run_model(X, y, X_a, X_b, linear_reg, "linear_regression", plot_regression)
+    out_file.write("Linear Regression Misclassification Error=" + str(misclassification_error) + "\n")
 
     logistic_reg = lgrm.LogisticRegression()
-    logistic_reg.fit(X, y)
-    misclassification_error = np.sum(logistic_reg.predict(X, 0) != y)/len(y)
-    print(misclassification_error)
-    plot_regression(X_a, X_b, logistic_reg, "logistic_regression")
+    misclassification_error = run_model(X, y, X_a, X_b, logistic_reg, "logistic_regression", plot_regression)
+    out_file.write("Logistic Regression Misclassification Error=" + str(misclassification_error) + "\n")
+
+
+def run_mnist_training(out_file):
+    mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
+    svm_mnist = SVM()
+    generalization_error = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, svm_mnist)
+    out_file.write("SVM MNIST C:1000.1 Generalization Error=" + str(generalization_error) + "\n")
+
+    linear_reg = lrm.LinearRegression()
+    generalization_error = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, linear_reg)
+    out_file.write("Linear Regression Generalization Error=" + str(generalization_error) + "\n")
+
+    logistic_reg = lgrm.LogisticRegression()
+    generalization_error = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, logistic_reg)
+    out_file.write("Logistic Regression Generalization Error=" + str(generalization_error) + "\n")
+
+
+def run_model_with_cvloo(X, y, model):
+    train_X = X
+    train_y = y
+    test_X = []
+    test_y = []
+    cv_error = 0.0
+    for id in range(len(X)):
+        test_X.append(train_X[id])
+        test_X = np.array(test_X).astype(np.double)
+        test_y.append(train_y[id])
+        test_y = np.array(test_y).astype(np.double)
+        train_X = np.delete(train_X, id, 0)
+        train_y = np.delete(train_y, id, 0)
+        model.fit(train_X, train_y)
+        cv_error += np.sum(model.predict(test_X, 0.0) != test_y)/len(test_y)
+        train_X = X
+        train_y = y
+        test_X = []
+        test_y = []
+    cv_error /= len(y)
+    return cv_error
+
+
+def run_dummy_data_cvloo_training(out_file):
+    X, y, X_a, X_b = grd.generate_dataset()
+
+    C_list = [0.0, 0.0001, 100.1, 1000.1]
+    for c in C_list:
+        svm = SVM(c)
+        cv_error = run_model_with_cvloo(X, y, svm)
+        out_file.write("SVM C:" + str(c) + " Cross-validation Error=" + str(cv_error) + "\n")
+
+    linear_reg = lrm.LinearRegression()
+    cv_error = run_model_with_cvloo(X, y, linear_reg)
+    out_file.write("Linear Regression Cross-validation Error=" + str(cv_error) + "\n")
+
+    logistic_reg = lgrm.LogisticRegression()
+    cv_error = run_model_with_cvloo(X, y, logistic_reg)
+    out_file.write("Logistic Regression Cross-validation Error=" + str(cv_error) + "\n")
+
+
+def main():
+    out_file = open("run.out", "w")
+    run_dummy_data_training(out_file)
+    run_mnist_training(out_file)
+    run_dummy_data_cvloo_training(out_file)
+    out_file.close()
 
 
 if __name__ == "__main__":
