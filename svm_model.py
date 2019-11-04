@@ -7,6 +7,9 @@ class SVM(object):
     def __init__(self, C=1000.1):
         self.C = float(C)
 
+    def get_C():
+        return self.C
+
     def kernel(self, x1, x2):
         return np.dot(x1, x2)
 
@@ -55,6 +58,9 @@ class SVM(object):
         self.w = np.zeros(feature_size)
         for i in range(len(self.sv_a)):
             self.w += self.sv_a[i] * self.sv_y[i] * self.sv_X[i]
+
+    def margin(self):
+        return 1 / np.sqrt(np.sum(self.w**2))
 
     def project(self, X):
         return np.dot(X, self.w) + self.b

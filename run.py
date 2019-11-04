@@ -57,15 +57,27 @@ def plot_regression(X_a, X_b, model, model_name):
 
 def run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, model):
     model.fit(mnist_train_X, mnist_train_y)
+    margin = 0.0
+    try:
+        margin = model.margin()
+    except:
+        margin = 0.0
+
     generalization_error = np.sum(model.predict(mnist_test_X, 0.0) != mnist_test_y)/len(mnist_test_y)
-    return generalization_error
+    return generalization_error, margin
 
 
 def run_model(X, y, X_a, X_b, model, model_name, plot_func):
     model.fit(X, y)
+    margin = 0.0
+    try:
+        margin = model.margin()
+    except:
+        margin = 0.0
+
     plot_func(X_a, X_b, model, model_name)
     misclassification_error = np.sum(model.predict(X, 0.0) != y)/len(y)
-    return misclassification_error
+    return misclassification_error, margin
 
 
 def run_dummy_data_training(out_file):
@@ -74,31 +86,31 @@ def run_dummy_data_training(out_file):
     C_list = [0.0001, 0.001, 100.1, 1000.1]
     for c in C_list:
         svm = SVM(c)
-        misclassification_error = run_model(X, y, X_a, X_b, svm, "support_vector_machine", plot_svm)
-        out_file.write("SVM C:" + str(c) + " Misclassification Error=" + str(misclassification_error) + "\n")
+        misclassification_error, margin = run_model(X, y, X_a, X_b, svm, "support_vector_machine", plot_svm)
+        out_file.write("SVM C:" + str(c) + " Misclassification Error=" + str(misclassification_error) + " Margin=" + str(margin) + "\n")
 
     linear_reg = lrm.LinearRegression()
-    misclassification_error = run_model(X, y, X_a, X_b, linear_reg, "linear_regression", plot_regression)
-    out_file.write("Linear Regression Misclassification Error=" + str(misclassification_error) + "\n")
+    misclassification_error, margin = run_model(X, y, X_a, X_b, linear_reg, "linear_regression", plot_regression)
+    out_file.write("Linear Regression Misclassification Error=" + str(misclassification_error) + " Margin=" + str(margin) + "\n")
 
     logistic_reg = lgrm.LogisticRegression()
-    misclassification_error = run_model(X, y, X_a, X_b, logistic_reg, "logistic_regression", plot_regression)
-    out_file.write("Logistic Regression Misclassification Error=" + str(misclassification_error) + "\n")
+    misclassification_error, margin = run_model(X, y, X_a, X_b, logistic_reg, "logistic_regression", plot_regression)
+    out_file.write("Logistic Regression Misclassification Error=" + str(misclassification_error) + " Margin=" + str(margin) + "\n")
 
 
 def run_mnist_training(out_file):
     mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
     svm_mnist = SVM()
-    generalization_error = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, svm_mnist)
-    out_file.write("SVM MNIST C:1000.1 Generalization Error=" + str(generalization_error) + "\n")
+    generalization_error, margin = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, svm_mnist)
+    out_file.write("SVM MNIST C:" + str(svm_mnist.get_C()) + " Generalization Error=" + str(generalization_error) + " Margin=" + str(margin) + "\n")
 
     linear_reg = lrm.LinearRegression()
-    generalization_error = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, linear_reg)
-    out_file.write("Linear Regression Generalization Error=" + str(generalization_error) + "\n")
+    generalization_error, margin = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, linear_reg)
+    out_file.write("Linear Regression Generalization Error=" + str(generalization_error) + " Margin=" + str(margin) + "\n")
 
     logistic_reg = lgrm.LogisticRegression()
-    generalization_error = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, logistic_reg)
-    out_file.write("Logistic Regression Generalization Error=" + str(generalization_error) + "\n")
+    generalization_error, margin = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, logistic_reg)
+    out_file.write("Logistic Regression Generalization Error=" + str(generalization_error) + " Margin=" + str(margin) + "\n")
 
 
 def run_model_with_cvloo(X, y, model):
