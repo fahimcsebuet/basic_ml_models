@@ -145,7 +145,7 @@ def run_dummy_data_cvloo_training(out_file):
 def main():
     out_file = open("run.out", "w")
     run_dummy_data_training(out_file)
-    # run_mnist_training(out_file)
+    run_mnist_training(out_file)
     run_dummy_data_cvloo_training(out_file)
     out_file.close()
 
