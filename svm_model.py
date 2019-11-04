@@ -46,7 +46,10 @@ class SVM(object):
         for i in range(len(self.sv_a)):
             self.b += self.sv_y[i]
             self.b -= np.sum(self.sv_a * self.sv_y * K[ids[i], is_sv])
-        self.b /= len(self.sv_a)
+        if len(self.sv_a):
+            self.b /= len(self.sv_a)
+        else:
+            print("Exception: No support vector")
 
         #Find weight vector
         self.w = np.zeros(feature_size)
