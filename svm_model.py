@@ -7,7 +7,7 @@ class SVM(object):
     def __init__(self, C=1000.1):
         self.C = float(C)
 
-    def get_C():
+    def get_C(self):
         return self.C
 
     def kernel(self, x1, x2):
