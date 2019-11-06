@@ -4,8 +4,9 @@ import generate_random_data as grd
 import numpy as np
 
 class SVM(object):
-    def __init__(self, C=1000.1):
+    def __init__(self, C=1000.1, dataset="dummy"):
         self.C = float(C)
+        self.dataset = dataset
 
     def name(self):
         return "svm"
@@ -41,7 +42,10 @@ class SVM(object):
         a = np.ravel(sol['x'])
 
         # Find support vectors
-        is_sv = a > 1e-5 # True if Lagrangian is non-zero
+        zero_equivalent = 1e-5
+        if self.dataset == "mnist":
+            zero_equivalent = 1e-10
+        is_sv = a > zero_equivalent # True if Lagrangian is non-zero
         ids = np.arange(len(a))[is_sv]
         self.sv_a = a[is_sv]
         self.sv_X = X[is_sv]

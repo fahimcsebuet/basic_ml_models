@@ -31,6 +31,7 @@ The dataset generation is implemented in \texttt{generate\_random\_data.py}.
 The dataset is fed to the SVM model and the value of C is varied from 1000.1, 100.1, 0.001 to 0.0001.
 \figurename~\ref{fig:svm_c_1000.1}, \figurename~\ref{fig:svm_c_100.1}, \figurename~\ref{fig:svm_c_0.001} and
 \figurename~\ref{fig:svm_c_0.0001} depict the results for SVM model when C = 1000.1, 100.1, 0.001 and 0.0001, respectively.
+For specifying the support vector while using dummy dataset, the zero equivalent for comparing with lagrangian is set to $1e^{-5}$.
 All the figures show the datapoints, i.e. red crosses and green crosses belong to Class A and B respectively,
 the support vectors are circles by blue circles. The classifier is denoted by the solid black line and the decision boundaries are shown by the dashed lines.
 The misclassification error, leave-one-out cross validation error and margin for different values of C are mentioned in Table~\ref{tab:table_C}.
@@ -73,6 +74,8 @@ C &  Misclassification Error & Leave-one-out Cross Validation Error & Margin\\
 Only the samples with 0 and 1 labels in the MNIST dataset are filtered out in \texttt{mnist\_reader.py} file.
 For training the SVM model with MNIST, the value for the tradeoff variable C is set to 1000.1.
 The generalization error is 0.0009456264775413711 in this case.
+For specifying the support vector while using MNIST dataset, the zero equivalent for comparing with lagrangian is set to $1e^{-10}$,
+otherwise, no sample qualified for being a support vector for having too small lagrangian.
 
 \section{Regression}
 

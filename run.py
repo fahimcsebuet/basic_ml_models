@@ -117,7 +117,7 @@ def run_dummy_data_training(out_file):
 def run_mnist_training(out_file):
     mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
 
-    svm_mnist = SVM()
+    svm_mnist = SVM(dataset="mnist")
     generalization_error, margin = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, svm_mnist)
     out_file.write("SVM MNIST C:" + str(svm_mnist.get_C()) + " Generalization Error=" + str(generalization_error) + " Margin=" + str(margin) + "\n")
 
@@ -175,10 +175,10 @@ def run_dummy_data_cvloo_training(out_file):
 
 
 def main():
-    out_file = open("run.out", "w")
+    out_file = open("run_test.out", "w")
     run_dummy_data_training(out_file)
     run_mnist_training(out_file)
-    run_dummy_data_cvloo_training(out_file)
+    # run_dummy_data_cvloo_training(out_file)
     out_file.close()
 
 

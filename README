@@ -12,7 +12,7 @@ Python files
 > mnist_reader.py
     - loads the MNIST training and test data using mlxtend. Replaces 0 labels with -1 value for uniformity
 > svm_model.py
-    - implements the support vector machine model through SVM class definition taking C as initializing attribute
+    - implements the support vector machine model through SVM class definition taking C and dataset name as initializing attributes
 > linear_regression_model.py
     - implements the linear regression model through LinearRegression class definition taking learning rate and maximum number of iterations as initializing attributes
 > logistic_regression_model.py
