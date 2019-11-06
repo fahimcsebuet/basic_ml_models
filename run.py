@@ -24,8 +24,8 @@ def plot_svm(X_a, X_b, svm, model_name):
     Z = svm.project(X).reshape(X1.shape)
 
     plt.contour(X1, X2, Z, [0.0], colors='black', linewidths=2, origin='lower')
-    plt.contour(X1, X2, Z + 1, [0.0], colors='red', linewidths=1, linestyles = 'dashed', origin='lower')
-    plt.contour(X1, X2, Z - 1, [0.0], colors='green', linewidths=1, linestyles = 'dashed', origin='lower')
+    plt.contour(X1, X2, Z + 1, [0.0], colors='green', linewidths=1, linestyles = 'dashed', origin='lower')
+    plt.contour(X1, X2, Z - 1, [0.0], colors='red', linewidths=1, linestyles = 'dashed', origin='lower')
 
     plt.legend(loc='best')
 
@@ -63,7 +63,11 @@ def run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, model):
     except:
         margin = 0.0
 
-    generalization_error = np.sum(model.predict(mnist_test_X, 0.0) != mnist_test_y)/len(mnist_test_y)
+    threshold = 0.0
+    if model.name() == "logistic":
+        threshold = 0.5
+
+    generalization_error = np.sum(model.predict(mnist_test_X, threshold) != mnist_test_y)/len(mnist_test_y)
     return generalization_error, margin
 
 
@@ -76,7 +80,12 @@ def run_model(X, y, X_a, X_b, model, model_name, plot_func):
         margin = 0.0
 
     plot_func(X_a, X_b, model, model_name)
-    misclassification_error = np.sum(model.predict(X, 0.0) != y)/len(y)
+
+    threshold = 0.0
+    if model.name() == "logistic":
+        threshold = 0.5
+
+    misclassification_error = np.sum(model.predict(X, threshold) != y)/len(y)
     return misclassification_error, margin
 
 

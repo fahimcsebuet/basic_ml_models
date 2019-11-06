@@ -7,6 +7,9 @@ class SVM(object):
     def __init__(self, C=1000.1):
         self.C = float(C)
 
+    def name(self):
+        return "svm"
+
     def get_C(self):
         return self.C
 
@@ -66,4 +69,4 @@ class SVM(object):
         return np.dot(X, self.w) + self.b
 
     def predict(self, X, threshold):
-        return np.sign(self.project(X))
+        return np.ravel(np.sign(self.project(X)))
