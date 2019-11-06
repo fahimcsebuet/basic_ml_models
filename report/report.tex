@@ -79,7 +79,7 @@ The generalization error is 0.0009456264775413711 in this case.
 \subsection{Answer to 2(a)}
 The linear regression implementation is in \texttt{linear\_regression\_model.py} file. Here, the learning rate is
 set to 0.001 and number of maximum iterations is kept as 10000. The binary classifier has a 0.0 threshold.
-It returns +1 for Class A and -1 for Class B. \figurename~\ref{fig:linear_dummy}, shows the decision boundary
+It returns +1 for Class A and -1 for Class B. \figurename~\ref{fig:linear_dummy} shows the decision boundary
 of the classifier indicated by the solid black line. The training points are also plotted, i.e. red crosses are
 Class A and green crosses are Class B training points. The leave-one-out cross validation error here is 0.085.
 For convergence, the mean squared error is calculated for measuring the loss function. The maximum value
@@ -90,20 +90,20 @@ allowed here is $2^{300}$ for avoiding overflow issue in Python.
 \caption{Linear regression on dummy dataset} \label{fig:linear_dummy}
 \end{figure}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{logistic_regression.pdf}
+\caption{Logistic regression on dummy dataset} \label{fig:logistic_dummy}
+\end{figure}
 \subsection{Answer to 2(b)}
 The logistic regression implementation is in \texttt{logistic\_regression\_model.py} file. Here, the learning rate is
 set to 0.001 and number of maximum iterations is kept as 10000. The binary classifier predicts +1 if the
 sigmoidal function value is more than or equal to 0.5, otherwise it predicts -1.
-As usual, it returns +1 for Class A and -1 for Class B. \figurename~\ref{fig:logistic_dummy}, shows the decision boundary
+As usual, it returns +1 for Class A and -1 for Class B. \figurename~\ref{fig:logistic_dummy} shows the decision boundary
 of the classifier indicated by the solid black line. The training points are also plotted, i.e. red crosses are
 Class A and green crosses are Class B training points. The leave-one-out cross validation error here is 0.085.
 For convergence, cross entropy or log loss function is calculated for measuring the loss function. $1e^{-10}$ is
 added to predicted value in the loss function to avoid division by zero exceptions in Python.
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{logistic_regression.pdf}
-\caption{Linear regression on dummy dataset} \label{fig:logistic_dummy}
-\end{figure}
 
 \subsection{Answer to 2(c)}
 The comparison of the generalization errors of distinguishing between class 0 and class 1 on the MNIST
