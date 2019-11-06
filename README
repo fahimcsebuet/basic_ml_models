@@ -1,0 +1,29 @@
+Pre-requisite python packages
+-----------------------------
+- numpy
+- cvxopt
+- matplotlib
+- mlxtend
+
+Python files
+------------
+> generate_random_data.py
+    - generates the Class A and Class B datapoints with proper label according to project specifications
+> mnist_reader.py
+    - loads the MNIST training and test data using mlxtend. Replaces 0 labels with -1 value for uniformity
+> svm_model.py
+    - implements the support vector machine model through SVM class definition taking C as initializing attribute
+> linear_regression_model.py
+    - implements the linear regression model through LinearRegression class definition taking learning rate and maximum number of iterations as initializing attributes
+> logistic_regression_model.py
+    - implements the logistic regression model through LogisticRegression class definition taking learning rate and maximum number of iterations as initializing attributes
+> run.py
+    - executes the main function, generates necessary test cases or experiments for project requirements and draws the plots
+
+How to run the code
+-------------------
+> Command: python run.py
+> Input: None
+> Outputs:
+    - run.out: all the results needed for the report, i.e. misclassification, generalization and leave-one-out cross validation errors and margins for SVM
+    - *.pdf: the plots for SVM for different C values, linear regression and logistic regression on dummy dataset

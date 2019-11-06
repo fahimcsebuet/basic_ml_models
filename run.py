@@ -11,7 +11,7 @@ import sys
 def plot_svm(X_a, X_b, svm, model_name):
     # plot data points and suport vectors
     plt.style.use('classic')
-    plt.title(model_name + " C=" + str(svm.C))
+    plt.title(model_name + " C=" + str(svm.get_C()))
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.plot(X_a[:,0], X_a[:,1], 'rx', label='Class A')
@@ -19,7 +19,10 @@ def plot_svm(X_a, X_b, svm, model_name):
     plt.scatter(svm.sv_X[:,0], svm.sv_X[:,1], s=50, edgecolors='b', facecolors='none', label='Support Vector')
 
     # plot boundaries
-    X1, X2 = np.meshgrid(np.linspace(-6, 6, 50), np.linspace(-6, 6, 50))
+    boundary_range = [-6, 6]
+    if svm.get_C() == 0.0001:
+        boundary_range = [-25, 25]
+    X1, X2 = np.meshgrid(np.linspace(boundary_range[0], boundary_range[1], 50), np.linspace(boundary_range[0], boundary_range[1], 50))
     X = np.array([[x1, x2] for x1, x2 in zip(np.ravel(X1), np.ravel(X2))])
     Z = svm.project(X).reshape(X1.shape)
 
@@ -47,7 +50,11 @@ def plot_regression(X_a, X_b, model, model_name):
     X = np.array([[x1, x2] for x1, x2 in zip(np.ravel(X1), np.ravel(X2))])
     Z = model.project(X).reshape(X1.shape)
 
-    plt.contour(X1, X2, Z, [0.0], colors='black', linewidths=2, origin='lower')
+    threshold = 0.0
+    if model.name() == "logistic":
+        threshold = 0.5
+
+    plt.contour(X1, X2, Z-threshold, [0.0], colors='black', linewidths=2, origin='lower')
 
     plt.legend(loc='best')
 
@@ -109,6 +116,7 @@ def run_dummy_data_training(out_file):
 
 def run_mnist_training(out_file):
     mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y = mr.read_mnist_data()
+
     svm_mnist = SVM()
     generalization_error, margin = run_mnist(mnist_train_X, mnist_train_y, mnist_test_X, mnist_test_y, svm_mnist)
     out_file.write("SVM MNIST C:" + str(svm_mnist.get_C()) + " Generalization Error=" + str(generalization_error) + " Margin=" + str(margin) + "\n")
@@ -136,7 +144,10 @@ def run_model_with_cvloo(X, y, model):
         train_X = np.delete(train_X, id, 0)
         train_y = np.delete(train_y, id, 0)
         model.fit(train_X, train_y)
-        cv_error += np.sum(model.predict(test_X, 0.0) != test_y)/len(test_y)
+        threshold = 0.0
+        if model.name() == "logistic":
+            threshold = 0.5
+        cv_error += np.sum(model.predict(test_X, threshold) != test_y)/len(test_y)
         train_X = X
         train_y = y
         test_X = []

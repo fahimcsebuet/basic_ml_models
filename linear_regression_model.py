@@ -11,7 +11,7 @@ class LinearRegression:
         return "linear"
 
     def loss(self, y_pred, y):
-        return np.square(np.subtract(y_pred, y)).mean()
+        return np.sum(np.square(np.subtract(y_pred%(2**300), y%(2**300)))) / (2 * y.shape[0])
 
     def fit(self, X, y):
         self.w = np.zeros((X.shape[1], 1))

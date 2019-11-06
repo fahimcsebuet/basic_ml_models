@@ -1,5 +1,4 @@
 import numpy as np
-from pprint import pprint
 
 def generate_class_a_points():
     # method to generate class A points corresponding to +1
