@@ -27,3 +27,7 @@ How to run the code
 > Outputs:
     - run.out: all the results needed for the report, i.e. misclassification, generalization and leave-one-out cross validation errors and margins for SVM
     - *.pdf: the plots for SVM for different C values, linear regression and logistic regression on dummy dataset
+	
+Report File
+-----------
+> report.pdf
